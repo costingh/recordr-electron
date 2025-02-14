@@ -3,11 +3,11 @@ import { SignedOut, SignInButton, SignUpButton } from "@clerk/clerk-react";
 
 function AuthButton() {
 	return <SignedOut>
-        <div className="flex gap-x-3 h-screen justify-center items-center">
+        <div className="flex gap-x-3 h-[200px] justify-center items-center">
             <SignInButton>
                 <Button
                     variant={'outline'}
-                    className="px-10 rounded-full hover:bg-gray-200"
+                    className="px-10 rounded-full bg-gray-200 hover:bg-gray-300"
                 >
                     Sign In
                 </Button>
@@ -16,7 +16,7 @@ function AuthButton() {
             <SignUpButton>
                 <Button
                     variant={'outline'}
-                    className="px-10 rounded-full hover:bg-gray-200"
+                    className="px-10 rounded-full bg-gray-200 hover:bg-gray-300"
                 >
                     Sign Up
                 </Button>

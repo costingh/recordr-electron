@@ -49,17 +49,17 @@ const MediaConfiguration = ({ state, user }: Props) => {
 	console.log(state);
 
 	return (
-		<form className="flex h-full relative w-full flex-col gap-y-5">
+		<form className="flex h-full relative w-full flex-col gap-y-3">
 			{isPending && (
 				<div className="fixed z-50 w-full top-0 left-0 right-0 bottom-0 rounded-2xl h-full bg-black/80 flex justify-center items-center">
 					<Loader />
 				</div>
 			)}
-			<div className="flex gap-x-5 justify-center items-center">
-				<Monitor fill="#575655" color="#575655" size={36} />
+			<div className="flex gap-x-2 justify-center items-center">
+				<Monitor fill="#575655" color="#575655" size={18} />
 				<select
 					{...register("screen")}
-					className="outline-none cursor-pointer px-5 py-2 rounded-xl border-2 text-white border-[575655] bg-transparent w-full"
+					className="outline-none cursor-pointer px-3 py-1 rounded-xl border-[1px] text-[#ccc] text-[13px] border-[#575655] bg-transparent w-full"
 				>
 					{state.displays?.map((display, key) => (
 						<option
@@ -75,11 +75,11 @@ const MediaConfiguration = ({ state, user }: Props) => {
 					))}
 				</select>
 			</div>
-			<div className="flex gap-x-5 justify-center items-center">
-				<Headphones color="#575655" size={36} />
+			<div className="flex gap-x-2 justify-center items-center">
+				<Headphones color="#575655" size={18} />
 				<select
 					{...register("audio")}
-					className="outline-none cursor-pointer px-5 py-2 rounded-xl border-2 text-white border-[575655] bg-transparent w-full"
+					className="outline-none cursor-pointer px-3 py-1 rounded-xl border-[1px] text-[#ccc] text-[13px] border-[#575655] bg-transparent w-full"
 				>
 					{state.audioInputs?.map((device, key) => (
 						<option
@@ -96,11 +96,11 @@ const MediaConfiguration = ({ state, user }: Props) => {
 					))}
 				</select>
 			</div>
-			<div className="flex gap-x-5 justify-center items-center">
-				<Settings2 color="#575655" size={36} />
+			<div className="flex gap-x-2 justify-center items-center">
+				<Settings2 color="#575655" size={18} />
 				<select
 					{...register("preset")}
-					className="outline-none cursor-pointer px-5 py-2 rounded-xl border-2 text-white border-[575655] bg-transparent w-full"
+					className="outline-none cursor-pointer px-3 py-1 rounded-xl border-[1px] text-[#ccc] text-[13px] border-[#575655] bg-transparent w-full"
 				>
 					<option
 						disabled={user?.subscription?.plan === "FREE"}

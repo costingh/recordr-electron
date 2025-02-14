@@ -66,18 +66,19 @@ const StudioTray = () => {
 		}, 1);
 		return () => clearInterval(recordTimeInterval);
 	}, [recording]);
+	
 	return !onSources ? (
 		<></>
 	) : (
-		<div className="flex flex-col justify-end gap-y-5 h-screen">
+		<div className="flex flex-col justify-end gap-y-3 h-screen">
 			{preview && (
 				<video
 					autoPlay
 					ref={videoElement}
-					className={cn("w-6/12 self-end bg-white")}
+					className={cn("w-8/12 self-end bg-white")}
 				></video>
 			)}
-			<div className="rounded-full flex justify-around items-center h-20 w-full border-2 bg-[#171717] draggable border-white/40">
+			<div className="rounded-full py-[10px] flex justify-around items-center h-[40px] w-full border-1 bg-[#171717] draggable border-white/40">
 				<div
 					{...(onSources && {
 						onClick: () => {
@@ -87,7 +88,7 @@ const StudioTray = () => {
 					})}
 					className={cn(
 						"non-draggable rounded-full cursor-pointer relative hover:opacity-80",
-						recording ? "bg-red-500 w-6 h-6" : "bg-red-400 w-8 h-8"
+						recording ? "bg-red-500 w-[26px] h-[26px]" : "bg-red-400 w-[24px] h-[24px]"
 					)}
 				>
 					{recording && (
@@ -99,13 +100,13 @@ const StudioTray = () => {
 				{!recording ? (
 					<Pause
 						className="non-draggable opacity-50"
-						size={32}
+						size={24}
 						fill="white"
 						stroke="none"
 					/>
 				) : (
 					<Square
-						size={32}
+						size={24}
 						className="non-draggable cursor-pointer hover:scale-110 transfrom transition duration-150"
 						fill="white"
 						onClick={() => {
@@ -118,9 +119,9 @@ const StudioTray = () => {
 				)}
 				<Cast
 					onClick={() => setPreview((prev) => !prev)}
-					size={32}
+					size={24}
 					fill="white"
-					className="non-draggable cursor-pointer hover:opacity-60"
+					className="non-draggable cursor-pointer opacity-50 hover:opacity-100"
 					stroke="white"
 				/>
 			</div>

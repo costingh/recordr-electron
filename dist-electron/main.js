@@ -12,15 +12,15 @@ let studio;
 let floatingWebCam;
 function createWindow() {
   win = new BrowserWindow({
-    width: 400,
-    height: 500,
-    minHeight: 500,
-    minWidth: 250,
+    width: 350,
+    height: 550,
+    minHeight: 550,
+    minWidth: 350,
     frame: false,
     hasShadow: false,
     transparent: true,
     alwaysOnTop: true,
-    focusable: false,
+    focusable: true,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       nodeIntegration: false,
@@ -30,12 +30,12 @@ function createWindow() {
     }
   });
   studio = new BrowserWindow({
-    width: 400,
-    height: 300,
+    width: 300,
+    height: 70,
     minHeight: 70,
-    maxHeight: 400,
+    maxHeight: 70,
     minWidth: 300,
-    maxWidth: 400,
+    maxWidth: 300,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
@@ -49,12 +49,12 @@ function createWindow() {
     }
   });
   floatingWebCam = new BrowserWindow({
-    width: 400,
+    width: 300,
     height: 200,
     minHeight: 70,
-    maxHeight: 400,
+    maxHeight: 300,
     minWidth: 300,
-    maxWidth: 400,
+    maxWidth: 300,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
@@ -120,7 +120,7 @@ ipcMain.on("media-sources", (_, payload) => {
   console.log("EVENT:media sources", payload);
   studio == null ? void 0 : studio.webContents.send("profile-received", payload);
 });
-ipcMain.on("resize-studio", (event, payload) => {
+ipcMain.on("resize-studio", (_, payload) => {
   console.log("EVENT: resize studio", payload);
   if (payload.shrink) {
     studio == null ? void 0 : studio.setSize(400, 100);

@@ -42,9 +42,9 @@ const Widget = () => {
 		}
 	}, [user]);
 	return (
-		<div className="p-5">
+		<div className="p-3">
 			<ClerkLoading>
-				<div className="h-full flex justify-center items-center ">
+				<div className="h-full flex justify-center items-center">
 					<Loader />
 				</div>
 			</ClerkLoading>

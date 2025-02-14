@@ -13,11 +13,13 @@ const httpsClient = axios.create({
 export const onCloseApp = () => window.ipcRenderer.send("closeApp");
 
 export const fetchUserProfile = async (clerkId: string) => {
+	console.log('############   Inside fetchUserProfile')
 	const response = await httpsClient.get(`/auth/${clerkId}`, {
 		headers: {
 			"Content-Type": "application",
 		},
 	});
+	console.log(response.data)
 	return response.data;
 };
 

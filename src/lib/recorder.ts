@@ -1,6 +1,7 @@
 import { hidePluginWindow } from "./utils";
 import { v4 as uuid } from "uuid";
 import io from 'socket.io-client';
+import { toast } from "sonner";
 
 let videoTransferFileName: string | undefined;
 let mediaRecorder: MediaRecorder;
@@ -29,12 +30,17 @@ export const onStopRecording = () => {
 export const stopRecording = () => {
 	hidePluginWindow(false);
 	isRecording = false; // Set recording flag to false
-	alert('process-video')
 	socket.emit("process-video", {
 		filename: videoTransferFileName,
 		userId,
+	}, (response: { status: number, message: string }) => {
+		if (response.status == 200) {
+			console.log(response.message);
+		} else {
+			console.error(response.message);
+		}
 	});
-	
+
 };
 
 export const onDataAvailable = (e: BlobEvent) => {
@@ -71,35 +77,36 @@ export const selectSources = async (
 					],
 				},
 			};
-		
+
 			userId = onSourses.id;
-	
+
 			const stream = await navigator.mediaDevices.getUserMedia(constraints);
-	
+
 			const audioStream = await navigator.mediaDevices.getUserMedia({
 				video: false,
 				audio: { deviceId: { exact: onSourses.audio } },
 			});
-	
+
 			if (videoElement && videoElement.current) {
 				videoElement.current.srcObject = stream;
 				await videoElement.current.play();
 			}
-	
+
 			const combinedStream = new MediaStream([
 				...stream.getTracks(),
 				...audioStream.getTracks(),
 			]);
-	
+
 			mediaRecorder = new MediaRecorder(combinedStream, {
 				mimeType: "video/webm; codecs=vp9",
 			});
-			
+
 			mediaRecorder.ondataavailable = onDataAvailable;
 			mediaRecorder.onstop = stopRecording;
 		}
-	} catch(error: any) {
-		alert('An error occurred');
-    	alert(`Error Name: ${error.name}, Error Message: ${error.message}`);
+	} catch (error: any) {
+		toast('An error occurred')
+		// alert('An error occurred');
+		// alert(`Error Name: ${error.name}, Error Message: ${error.message}`);
 	}
 };
