@@ -1,9 +1,9 @@
-import StudioTray from "./components/Global/StudioTray"
+import StudioTray from "./components/Global/StudioTray";
 
 function App() {
-  return (
-    <StudioTray/>
-  )
+	return (
+		<StudioTray />
+	);
 }
 
-export default App
+export default App;

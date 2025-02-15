@@ -75,6 +75,14 @@ export const videoRecordingTime = (ms: number) => {
 	return { length: `${hour}:${minute}:${second}`, minute }
 }
 
+// hh:mm:ss => mm:ss
+export const formatTime = (hms: string) => {
+    const parts = hms.split(":");
+    const minutes = parseInt(parts[1], 10); 
+    const seconds = parts[2]; 
+    return `${minutes}:${seconds}`;
+}
+
 export const resizeWindow = (shrink: boolean) => {
 	window.ipcRenderer.send('resize-studio', { shrink })
 }

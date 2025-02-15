@@ -30,8 +30,8 @@ let floatingWebCam: BrowserWindow | null
 function createWindow() {
 	win = new BrowserWindow({
 		width: 350,
-		height: 550,
-		minHeight: 550,
+		height: 350,
+		minHeight: 350,
 		minWidth: 350,
 		frame: false,
 		hasShadow: false,
@@ -42,34 +42,14 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: false,
 			contextIsolation: true,
-			devTools: true,
+			// devTools: true,
 			preload: path.join(__dirname, 'preload.mjs'),
 		},
 	})
 
 	studio = new BrowserWindow({
 		width: 300,
-		height: 70,
-		minHeight: 70,
-		maxHeight: 70,
-		minWidth: 300,
-		maxWidth: 300,
-		frame: false,
-		transparent: true,
-		alwaysOnTop: true,
-		focusable: false,
-		icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
-		webPreferences: {
-			nodeIntegration: false,
-			contextIsolation: true,
-			devTools: true,
-			preload: path.join(__dirname, 'preload.mjs'),
-		},
-	})
-
-	floatingWebCam = new BrowserWindow({
-		width: 300,
-		height: 200,
+		height: 300,
 		minHeight: 70,
 		maxHeight: 300,
 		minWidth: 300,
@@ -82,17 +62,35 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: false,
 			contextIsolation: true,
-			devTools: true,
+			// devTools: true,
 			preload: path.join(__dirname, 'preload.mjs'),
 		},
 	})
+
+	// floatingWebCam = new BrowserWindow({
+	// 	width: 300,
+	// 	height: 200,
+	// 	minHeight: 70,
+	// 	maxHeight: 300,
+	// 	minWidth: 300,
+	// 	maxWidth: 300,
+	// 	frame: false,
+	// 	transparent: true,
+	// 	alwaysOnTop: true,
+	// 	focusable: false,
+	// 	icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+	// 	webPreferences: {
+	// 		nodeIntegration: false,
+	// 		contextIsolation: true,
+	// 		// devTools: true,
+	// 		preload: path.join(__dirname, 'preload.mjs'),
+	// 	},
+	// })
 
 	win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
 	win.setAlwaysOnTop(true, 'screen-saver', 1)
 	studio.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
 	studio.setAlwaysOnTop(true, 'screen-saver', 1)
-	floatingWebCam.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
-	floatingWebCam.setAlwaysOnTop(true, 'screen-saver', 1)
 
 	// Test active push message to Renderer-process.
 	win.webContents.on('did-finish-load', () => {
@@ -109,12 +107,10 @@ function createWindow() {
 	if (VITE_DEV_SERVER_URL) {
 		win.loadURL(VITE_DEV_SERVER_URL)
 		studio.loadURL(`${import.meta.env.VITE_APP_URL}/studio.html`)
-		floatingWebCam.loadURL(`${import.meta.env.VITE_APP_URL}/webcam.html`)
 	} else {
 		// win.loadFile('dist/index.html')
 		win.loadFile(path.join(RENDERER_DIST, 'index.html'))
 		studio.loadFile(path.join(RENDERER_DIST, 'studio.html'))
-		floatingWebCam.loadFile(path.join(RENDERER_DIST, 'webcam.html'))
 	}
 }
 

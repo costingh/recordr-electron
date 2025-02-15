@@ -1,8 +1,21 @@
-import { onStopRecording, selectSources, StartRecording } from "@/lib/recorder";
-import { cn, resizeWindow, videoRecordingTime } from "@/lib/utils";
+import {
+	onStopRecording,
+	selectSources,
+	StartRecording,
+	onPauseRecording,
+	onResumeRecording,
+} from "@/lib/recorder";
+import { cn, formatTime, resizeWindow, videoRecordingTime } from "@/lib/utils";
 import { Cast, Pause, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+type OnSourcesProps = {
+	screen: string;
+	id: string;
+	audio: string;
+	preset: "HD" | "SD";
+	plan: "PRO" | "FREE" | "BUSSINESS";
+};
 const StudioTray = () => {
 	const initialTime = new Date();
 
@@ -11,16 +24,13 @@ const StudioTray = () => {
 	const [count, setCount] = useState(0);
 
 	const [recording, setRecording] = useState(false);
-	const [onSources, setOnSources] = useState<
-		| {
-				screen: string;
-				id: string;
-				audio: string;
-				preset: "HD" | "SD";
-				plan: "PRO" | "FREE";
-		  }
-		| undefined
-	>(undefined);
+	const [onSources, setOnSources] = useState<OnSourcesProps | undefined>(
+		undefined
+	);
+	const [paused, setPaused] = useState(false);
+
+	const videoElement = useRef<HTMLVideoElement | null>(null);
+	const camElement = useRef<HTMLVideoElement | null>(null);
 
 	const clearTime = () => {
 		setOnTimer("00:00:00");
@@ -31,8 +41,6 @@ const StudioTray = () => {
 		console.log(event);
 		setOnSources(payload);
 	});
-
-	const videoElement = useRef<HTMLVideoElement | null>(null);
 
 	useEffect(() => {
 		resizeWindow(preview);
@@ -48,82 +56,137 @@ const StudioTray = () => {
 	}, [onSources]);
 
 	useEffect(() => {
-		if (!recording) return;
+		if (!recording || paused) return;
+
 		const recordTimeInterval = setInterval(() => {
 			const time = count + (new Date().getTime() - initialTime.getTime());
 			setCount(time);
 			const recordingTime = videoRecordingTime(time);
-			if (onSources?.plan === "FREE" && recordingTime.minute == "05") {
-				setRecording(false);
-				clearTime();
-				onStopRecording();
-			}
+
+			// if (onSources?.plan === "FREE" && recordingTime.minute == "05") {
+			// 	setRecording(false);
+			// 	clearTime();
+			// 	onStopRecording();
+			// }
+
 			setOnTimer(recordingTime.length);
 			if (time <= 0) {
 				setOnTimer("00:00:00");
 				clearInterval(recordTimeInterval);
 			}
 		}, 1);
+
 		return () => clearInterval(recordTimeInterval);
-	}, [recording]);
-	
+	}, [recording, paused]);
+
+	const streamWebCam = async (retries = 20) => {
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({
+				video: true,
+				audio: true,
+			});
+
+			if (camElement.current) {
+				camElement.current.srcObject = stream;
+				await camElement.current.play();
+			} else {
+				throw new Error("Error");
+			}
+		} catch (error) {
+			if (retries > 0) {
+				console.warn(
+					`Retrying webcam stream... Attempts left: ${retries}`
+				);
+				setTimeout(() => streamWebCam(retries - 1), 500);
+			} else {
+				console.error(
+					"Failed to access webcam after multiple attempts",
+					error
+				);
+			}
+		}
+	};
+
+	useEffect(() => {
+		streamWebCam();
+	}, []);
+
+	const handlePauseVideo = () => {
+		if (recording) {
+			if (!paused) {
+				onPauseRecording();
+				setPaused(true);
+			} else {
+				onResumeRecording();
+				setPaused(false);
+			}
+		}
+	};
+
+	const handleStopVideo = () => {
+		setRecording(false);
+		clearTime();
+		onStopRecording();
+	};
+
+	const handleStartVideo = (onSources: OnSourcesProps) => {
+		setRecording(true);
+		StartRecording(onSources);
+	};
+
 	return !onSources ? (
 		<></>
 	) : (
-		<div className="flex flex-col justify-end gap-y-3 h-screen">
-			{preview && (
+		<div className="flex flex-col justify-center items-center gap-y-3 h-screen">
+			<video
+				ref={camElement}
+				className="h-[100px] w-[100px] rounded-full draggable object-cover aspect-video border-[1px] relative border-gray-199"
+			></video>
+			{/* {preview && (
 				<video
 					autoPlay
 					ref={videoElement}
 					className={cn("w-8/12 self-end bg-white")}
 				></video>
-			)}
-			<div className="rounded-full py-[10px] flex justify-around items-center h-[40px] w-full border-1 bg-[#171717] draggable border-white/40">
+			)} */}
+			<div className="rounded-full py-[5px] px-[15px] flex justify-around items-center h-[40px] gap-[15px] border-[3px] bg-gray-100 draggable border-gray-500/40">
 				<div
 					{...(onSources && {
-						onClick: () => {
-							setRecording(true);
-							StartRecording(onSources);
-						},
+						onClick: () =>
+							recording
+								? handleStopVideo()
+								: handleStartVideo(onSources),
 					})}
 					className={cn(
-						"non-draggable rounded-full cursor-pointer relative hover:opacity-80",
-						recording ? "bg-red-500 w-[26px] h-[26px]" : "bg-red-400 w-[24px] h-[24px]"
+						"non-draggable cursor-pointer relative hover:opacity-80 transition-all duration-3",
+						!recording
+							? "bg-red-400 w-[18px] h-[18px] rounded-full"
+							: "bg-red-400 w-[17px] h-[17px] rounded-[4px]"
 					)}
+				></div>
+				<span className="font-[700] text-gray-900 text-[10px]">
+					{formatTime(onTimer)}
+				</span>
+				<div className="bg-gray-300 h-[calc(100%-5px)] w-[1px]"></div>
+				<button
+					disabled={!recording}
+					className={cn(
+						"flex items-center gap-[3px] non-draggable cursor-pointer transition-all duration-350",
+						!recording
+							? "opacity-50 pointer-events-none"
+							: "hover:opacity-80"
+					)}
+					onClick={() => recording && handlePauseVideo()}
 				>
-					{recording && (
-						<span className="absolute -right-16 top-1/2 transform -translate-y-1/2 text-white">
-							{onTimer}
-						</span>
+					{!paused ? (
+						<>
+							<div className="bg-gray-900 w-[4px] rounded-lg h-[13px]"></div>
+							<div className="bg-gray-900 w-[4px] rounded-lg h-[13px]"></div>
+						</>
+					) : (
+						<div className="w-0 h-0 border-l-[12px] border-l-gray-900 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent rounded-sm"></div>
 					)}
-				</div>
-				{!recording ? (
-					<Pause
-						className="non-draggable opacity-50"
-						size={24}
-						fill="white"
-						stroke="none"
-					/>
-				) : (
-					<Square
-						size={24}
-						className="non-draggable cursor-pointer hover:scale-110 transfrom transition duration-150"
-						fill="white"
-						onClick={() => {
-							setRecording(false);
-							clearTime();
-							onStopRecording();
-						}}
-						stroke="white"
-					/>
-				)}
-				<Cast
-					onClick={() => setPreview((prev) => !prev)}
-					size={24}
-					fill="white"
-					className="non-draggable cursor-pointer opacity-50 hover:opacity-100"
-					stroke="white"
-				/>
+				</button>
 			</div>
 		</div>
 	);

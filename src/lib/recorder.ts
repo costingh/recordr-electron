@@ -52,6 +52,18 @@ export const onDataAvailable = (e: BlobEvent) => {
 	}
 };
 
+export const onPauseRecording = () => {
+	if (mediaRecorder && mediaRecorder.state === "recording") {
+		mediaRecorder.pause();
+	}
+}
+
+export const onResumeRecording = () => {
+	if (mediaRecorder && mediaRecorder.state === "paused") {
+		mediaRecorder.resume();
+	}
+}
+
 export const selectSources = async (
 	onSourses: {
 		screen: string;

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overlay</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        canvas {
+            display: block;
+            pointer-events: none; /* Allow mouse events to pass through */
+        }
+    </style>
+</head>
+<body>
+    <canvas id="overlayCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("overlayCanvas");
+        const ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+
+        let mousePosition = { x: 0, y: 0 };
+
+        // Check if mousemove fires
+        document.addEventListener("mousemove", (event) => {
+            console.log("mousemove event triggered");
+            mousePosition = { x: event.clientX, y: event.clientY };
+            console.log("Mouse moved to:", mousePosition);
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(mousePosition.x, mousePosition.y, 10, 0, Math.PI * 2);
+            ctx.fill();
+            requestAnimationFrame(draw);
+        }
+
+        console.log("Overlay HTML loaded!");
+        draw();
+    </script>
+</body>
+</html>
