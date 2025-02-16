@@ -36,8 +36,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Remove unnecessary dependencies
-        run: npm prune --production
+      # - name: Remove unnecessary dependencies
+      #   run: npm prune --production
 
       - name: Build Windows app
         run: npm run build
