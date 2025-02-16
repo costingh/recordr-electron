@@ -55,10 +55,16 @@ jobs:
           name: Windows EXE
           path: dist/*.exe
 
+      - name: Create Git Tag
+        run: |
+          git tag v0.0.1 
+          git push origin v0.0.1
+
       - name: Publish EXE to GitHub Releases
         uses: softprops/action-gh-release@v1
         with:
           files: dist/*.exe
+          tagname: v0.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
