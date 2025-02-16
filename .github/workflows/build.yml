@@ -12,9 +12,16 @@ jobs:
 
     steps:
       - name: Debug GH_TOKEN
-        run: echo "GH_TOKEN is set"
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "❌ GH_TOKEN is NOT set"
+            exit 1
+          else
+            echo "✅ GH_TOKEN is set"
+          fi
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 
       - name: Checkout code
         uses: actions/checkout@v4
