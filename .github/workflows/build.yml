@@ -57,8 +57,10 @@ jobs:
 
       - name: Create Git Tag
         run: |
-          git tag v0.0.1 
-          git push origin v0.0.1
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+          git tag v0.0.1
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/costingh/recordr-electron.git v0.0.1
 
       - name: Publish EXE to GitHub Releases
         uses: softprops/action-gh-release@v1
