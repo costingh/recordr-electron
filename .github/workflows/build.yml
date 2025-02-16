@@ -1,0 +1,35 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches:
+      - main  # Change if using a different branch
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Windows app
+        run: npm run build
+
+      - name: Package EXE
+        run: npm run electron-builder -- --win
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows EXE
+          path: dist/*.exe

@@ -28,3 +28,25 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+
+npm run build
+npx electron-builder
+
+
+✅ 4. Find the Output
+After running electron-builder, you’ll find your executable in the dist/ folder:
+
+Windows: dist/Recordr Setup.exe
+macOS: dist/Recordr.dmg
+Linux: dist/Recordr.AppImage
+✅ 5. (Optional) Build for a Specific Platform
+If you want to build only for Windows, macOS, or Linux, use:
+
+npx electron-builder --win   # Windows
+npx electron-builder --mac   # macOS
+npx electron-builder --linux # Linux
+
+dist/Recordr Setup.exe  # Windows
+dist/Recordr.dmg        # macOS
+dist/Recordr.AppImage   # Linux
