@@ -5,8 +5,7 @@ import {
 	onPauseRecording,
 	onResumeRecording,
 } from "@/lib/recorder";
-import { cn, formatTime, resizeWindow, videoRecordingTime } from "@/lib/utils";
-import { Cast, Pause, Square } from "lucide-react";
+import { cn, formatTime, videoRecordingTime } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
 type OnSourcesProps = {
@@ -19,7 +18,7 @@ type OnSourcesProps = {
 const StudioTray = () => {
 	const initialTime = new Date();
 
-	const [preview, setPreview] = useState(false);
+	// const [preview, setPreview] = useState(false);
 	const [onTimer, setOnTimer] = useState<string>("00:00:00");
 	const [count, setCount] = useState(0);
 
@@ -42,10 +41,10 @@ const StudioTray = () => {
 		setOnSources(payload);
 	});
 
-	useEffect(() => {
-		resizeWindow(preview);
-		return () => resizeWindow(preview);
-	}, [preview]);
+	// useEffect(() => {
+	// 	resizeWindow(preview);
+	// 	return () => resizeWindow(preview);
+	// }, [preview]);
 
 	useEffect(() => {
 		if (onSources && onSources.screen)
