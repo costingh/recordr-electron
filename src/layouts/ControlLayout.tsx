@@ -45,9 +45,12 @@ const ControlLayout = ({ children, className }: Props) => {
 					/>
 				</div>
 			</div>
-
 			<div className="flex-1 h-0 overflow-auto">{children}</div>
-			<Logo />
+			
+			<div className="flex items-center justify-center pb-[15px]">
+				<Logo />
+			</div>
+
 		</div>
 	);
 };

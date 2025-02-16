@@ -93,3 +93,10 @@
   background: gray;
   border-radius: 10px;
 }
+
+body {
+	-webkit-app-region: no-drag; /* Prevent dragging everything */
+}
+.interactive {
+	pointer-events: auto; /* Make only specific elements interactive */
+}

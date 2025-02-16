@@ -137,7 +137,7 @@ const StudioTray = () => {
 	return !onSources ? (
 		<></>
 	) : (
-		<div className="flex flex-col justify-center items-center gap-y-3 h-screen">
+		<div className="flex flex-col justify-center items-center gap-y-3 mt-[30px] h-screen ">
 			<video
 				ref={camElement}
 				className="h-[100px] w-[100px] rounded-full draggable object-cover aspect-video border-[1px] relative border-gray-199"

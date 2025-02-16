@@ -38,12 +38,13 @@ function createWindow() {
     frame: false,
     transparent: true,
     alwaysOnTop: true,
-    focusable: false,
+    focusable: true,
+    resizable: false,
+    skipTaskbar: true,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      // devTools: true,
       preload: path.join(__dirname, "preload.mjs")
     }
   });
@@ -59,6 +60,24 @@ function createWindow() {
       "main-process-message",
       (/* @__PURE__ */ new Date()).toLocaleString()
     );
+  });
+  studio.webContents.once("did-finish-load", () => {
+    if (studio) {
+      if (process.platform !== "darwin") {
+        studio.setBounds({ x: 100, y: 100, width: 400, height: 400 });
+        try {
+          studio.setShape([
+            { x: 148, y: 150, width: 103, height: 100 },
+            // Circle camera
+            { x: 132, y: 230, width: 135, height: 76 }
+            // Control bar
+          ]);
+        } catch (error) {
+          console.warn("setShape is not supported, falling back to ignoreMouseEvents");
+          studio.setIgnoreMouseEvents(true, { forward: true });
+        }
+      }
+    }
   });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);

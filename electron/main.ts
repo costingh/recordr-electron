@@ -25,7 +25,6 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 
 let win: BrowserWindow | null
 let studio: BrowserWindow | null
-let floatingWebCam: BrowserWindow | null
 
 function createWindow() {
 	win = new BrowserWindow({
@@ -57,52 +56,76 @@ function createWindow() {
 		frame: false,
 		transparent: true,
 		alwaysOnTop: true,
-		focusable: false,
+		focusable: true,
+		resizable: false,
+		skipTaskbar: true,
 		icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
 		webPreferences: {
 			nodeIntegration: false,
 			contextIsolation: true,
-			// devTools: true,
-			preload: path.join(__dirname, 'preload.mjs'),
+			preload: path.join(__dirname, "preload.mjs"),
 		},
-	})
-
-	// floatingWebCam = new BrowserWindow({
-	// 	width: 300,
-	// 	height: 200,
-	// 	minHeight: 70,
-	// 	maxHeight: 300,
-	// 	minWidth: 300,
-	// 	maxWidth: 300,
-	// 	frame: false,
-	// 	transparent: true,
-	// 	alwaysOnTop: true,
-	// 	focusable: false,
-	// 	icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
-	// 	webPreferences: {
-	// 		nodeIntegration: false,
-	// 		contextIsolation: true,
-	// 		// devTools: true,
-	// 		preload: path.join(__dirname, 'preload.mjs'),
-	// 	},
-	// })
+	});
+	
 
 	win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
 	win.setAlwaysOnTop(true, 'screen-saver', 1)
 	studio.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
 	studio.setAlwaysOnTop(true, 'screen-saver', 1)
+	// studio.setIgnoreMouseEvents(true, { forward: true })
 
 	// Test active push message to Renderer-process.
 	win.webContents.on('did-finish-load', () => {
 		win?.webContents.send('main-process-message', (new Date).toLocaleString())
 	})
 
+	
 	studio.webContents.on('did-finish-load', () => {
 		studio?.webContents.send(
 			'main-process-message',
 			new Date().toLocaleString()
 		)
 	})
+
+	studio.webContents.once("did-finish-load", () => {
+		// Apply shape masking ONLY for Windows/Linux
+		if(studio) {
+			if (process.platform !== "darwin") {
+				studio.setBounds({ x: 100, y: 100, width: 400, height: 400 });
+	
+				// Use setShape if Electron supports it
+				try {
+					studio.setShape([
+						{ x: 148, y: 150, width: 103, height: 100 }, // Circle camera
+						{ x: 132, y: 230, width: 135, height: 76 }, // Control bar
+					]);
+				} catch (error) {
+					console.warn("setShape is not supported, falling back to ignoreMouseEvents");
+					studio.setIgnoreMouseEvents(true, { forward: true });
+				}
+			}
+		}
+	});
+
+	// win.webContents.once("did-finish-load", () => {
+	// 	// Apply shape masking ONLY for Windows/Linux
+	// 	if(win) {
+	// 		if (process.platform !== "darwin") {
+	// 			win.setBounds({ x: 100, y: 100, width: 400, height: 400 });
+	
+	// 			// Use setShape if Electron supports it
+	// 			try {
+	// 				win.setShape([
+	// 					{ x: 148, y: 150, width: 103, height: 100 }, // Circle camera
+	// 				]);
+	// 			} catch (error) {
+	// 				console.warn("setShape is not supported, falling back to ignoreMouseEvents");
+	// 				win.setIgnoreMouseEvents(true, { forward: true });
+	// 			}
+	// 		}
+	// 	}
+	// });
+
 
 	if (VITE_DEV_SERVER_URL) {
 		win.loadURL(VITE_DEV_SERVER_URL)
@@ -122,7 +145,6 @@ app.on('window-all-closed', () => {
 		app.quit()
 		win = null
 		studio = null
-		floatingWebCam = null
 	}
 })
 
@@ -131,7 +153,6 @@ ipcMain.on('closeApp', () => {
 		app.quit()
 		win = null
 		studio = null
-		floatingWebCam = null
 	}
 })
 
