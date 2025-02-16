@@ -12,15 +12,17 @@ jobs:
 
     steps:
       - name: Debug GH_TOKEN
+        shell: pwsh
         run: |
-          if [ -z "$GH_TOKEN" ]; then
-            echo "❌ GH_TOKEN is NOT set"
+          if ($env:GH_TOKEN -eq $null -or $env:GH_TOKEN -eq "") {
+            Write-Host "❌ GH_TOKEN is NOT set"
             exit 1
-          else
-            echo "✅ GH_TOKEN is set"
-          fi
+          } else {
+            Write-Host "✅ GH_TOKEN is set"
+          }
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 
 
       - name: Checkout code
