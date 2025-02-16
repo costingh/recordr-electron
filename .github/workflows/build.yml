@@ -42,7 +42,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Package EXE
-        run: npm run electron-builder -- --win
+        run: npm run build -- --win
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
