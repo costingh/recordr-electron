@@ -11,6 +11,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Debug GH_TOKEN
+        run: echo "GH_TOKEN is set"
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -22,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-            - name: Build Windows app
+      - name: Build Windows app
         run: npm run build
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
