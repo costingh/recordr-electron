@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Remove unnecessary dependencies
+        run: npm prune --production
+
       - name: Build Windows app
         run: npm run build
         env:
@@ -51,3 +54,11 @@ jobs:
         with:
           name: Windows EXE
           path: dist/*.exe
+
+      - name: Publish EXE to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

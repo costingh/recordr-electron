@@ -1,8 +1,9 @@
 {
-  "name": "desktop-app",
+  "name": "recordr",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0",
   "type": "module",
+  "compression": "maximum",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
@@ -67,6 +68,7 @@
   "build": {
     "appId": "com.recordr.rec",
     "productName": "Recordr",
+    "asar": true,
     "directories": {
       "output": "dist" 
     },
@@ -75,9 +77,12 @@
       "dist-electron/**",
       "package.json"
     ],
+    "extraFiles": [],
+    "asarUnpack": [],
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "icon": "build/icon.ico",
+      "artifactName": "recordr.exe"
     },
     "mac": {
       "target": "dmg",
