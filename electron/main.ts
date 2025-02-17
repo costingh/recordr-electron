@@ -1,7 +1,7 @@
 import { app, BrowserWindow, desktopCapturer, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-
+import unhandled from 'electron-unhandled';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -25,6 +25,14 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 
 let win: BrowserWindow | null
 let studio: BrowserWindow | null
+
+unhandled({
+    showDialog: true, // Shows a dialog box when an unhandled error occurs
+    logger: console.error, // Logs errors to console
+    reportButton: (error) => {
+        return `Report this error: ${error.message}`;
+    },
+});
 
 function createWindow() {
 	win = new BrowserWindow({

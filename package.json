@@ -46,6 +46,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "electron-unhandled": "^5.0.0",
     "embla-carousel-react": "^8.5.2",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.474.0",
@@ -70,7 +71,7 @@
     "productName": "Recordr",
     "asar": true,
     "directories": {
-      "output": "dist" 
+      "output": "dist"
     },
     "files": [
       "dist/**",
