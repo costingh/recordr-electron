@@ -26,8 +26,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -59,11 +57,13 @@ jobs:
           path: dist/*.exe
 
       - name: Check if tag exists
+        shell: pwsh
         run: |
-          if git ls-remote --tags origin | grep -q "refs/tags/v0.0.1"; then
-            echo "Tag v0.0.1 already exists. Skipping tag creation."
+          $tagExists = git ls-remote --tags origin | Select-String "refs/tags/v0.0.1"
+          if ($tagExists) {
+            Write-Host "Tag v0.0.1 already exists. Skipping tag creation."
             exit 0
-          fi
+          }
 
       - name: Create Git Tag
         run: |
