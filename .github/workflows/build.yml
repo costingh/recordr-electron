@@ -6,6 +6,9 @@ on:
       - main  # Change if using a different branch
   workflow_dispatch:  # Allows manual triggering
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
