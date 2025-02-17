@@ -57,15 +57,20 @@ jobs:
           path: dist/*.exe
 
       - name: Check if tag exists
+        id: check_tag
         shell: pwsh
         run: |
           $tagExists = git ls-remote --tags origin | Select-String "refs/tags/v0.0.1"
           if ($tagExists) {
             Write-Host "Tag v0.0.1 already exists. Skipping tag creation."
+            echo "exists=true" >> $env:GITHUB_ENV
             exit 0
+          } else {
+            echo "exists=false" >> $env:GITHUB_ENV
           }
 
       - name: Create Git Tag
+        if: env.exists == 'false'  # Skip this step if tag exists
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@github.com"
