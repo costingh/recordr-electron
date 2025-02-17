@@ -26,13 +26,19 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 let win: BrowserWindow | null
 let studio: BrowserWindow | null
 
-unhandled({
-    showDialog: true, // Shows a dialog box when an unhandled error occurs
-    logger: console.error, // Logs errors to console
-    reportButton: (error) => {
-        return `Report this error: ${error.message}`;
-    },
-});
+async function setupUnhandled() {
+    const { default: unhandled } = await import('electron-unhandled');
+
+    unhandled({
+        showDialog: true, // Show error dialog
+        logger: console.error, // Log errors to console
+        reportButton: (error) => {
+            return `Report this error: ${error.message}`;
+        },
+    });
+}
+
+app.whenReady().then(setupUnhandled);
 
 function createWindow() {
 	win = new BrowserWindow({
