@@ -58,6 +58,13 @@ jobs:
           name: Windows EXE
           path: dist/*.exe
 
+      - name: Check if tag exists
+        run: |
+          if git ls-remote --tags origin | grep -q "refs/tags/v0.0.1"; then
+            echo "Tag v0.0.1 already exists. Skipping tag creation."
+            exit 0
+          fi
+
       - name: Create Git Tag
         run: |
           git config --global user.name "GitHub Actions"
